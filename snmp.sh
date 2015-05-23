@@ -22,10 +22,8 @@ while [ True ]; do
 	
 	#1min avg cpu load
 	avgload=$(snmpget localhost .1.3.6.1.4.1.2021.10.1.3.1)	
-	IFS=', ' read -a loadarray <<< "$avgload"
-	#if [ ${loadarray[3]} -gt 8 ]; then
-	#if [ $("${loadarray[3]} > 8" | bc <<<) ]; then
-	if [ $(bc <<< ${loadarray[3]} > 8) ]; then
+	IFS=', ' read -a loadarray <<< "$avgload"	
+	if [ $(bc <<< "${loadarray[3]} > 8") ]; then
 
 		logger -p local0.WARN $avgload
 	else
