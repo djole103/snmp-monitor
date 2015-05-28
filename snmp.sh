@@ -31,6 +31,26 @@ while [ True ]; do
                 logger -p local0.INFO $ip CPU average load for 1 minute: ${loadarray[3]} # $avgload
         fi
 
+
+
+	#this only looks at a single instance, may have multiple discs
+	#next step is to parse all potential disc info and find average to log that
+	#also double check meaning of the value	
+	percentnode=$(snmpwalk -v2c -c public localhost .1.3.6.1.4.1.2021.9.1.10)
+        IFS=$', ' read -a inodearray <<< "$percentnode"
+
+        if [ $(bc <<< "${inodearray[3]} > 60") ]; then
+                logger -p local0.WARN $ip INODE percentage use: ${inodearray[3]}
+        else
+                logger -p local0.INFO $ip INODE percentage use: ${inodearray[3]}
+        fi
+#       for word in ${inodearray[@]} 
+#       do
+#               echo $word
+#       done
+
+
+
         sleep 5
 done
 
